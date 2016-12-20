@@ -2,13 +2,14 @@
 #include<stdlib.h>
 #include<string.h>
 char str1[2000][20];//存储字典里的词 
-float score[10];//备选的得分
+double score[10];//备选的得分
 char answer[10];//备选的答案
 void search();//持续进行精确匹配，如无该词进入模糊匹配 
-void jaccard(char str2);// 将str2与所有词比较， 将分值最高的十个词存入 answer 
-void cosine(char str2);//将str2与answer中十个词比较，将分值分别存进score 
-void cosine2(char str2);//将str2与answer中十个词比较，将分值分别加到score 
-void distance(char str2);//将str2与answer中十个词比较，将分值分别加到score，将分值最高的五个词与其得分按得分高低输出。 
+void jaccard(char str2);// 将str2与所有词比较， 将分值最高的十个词存入 answer，将score里每个元素赋值为0
+void cosine(char str2);//将str2与answer中十个词比较，将分值分别存进score，注意每个分值在0与1之间
+void cosine2(char str2);//将str2与answer中十个词比较，分值也应在0与1之间，将分值分别加到score
+void editdistance(char str2);//将str2与answer中十个词比较，比如需要三步变换，就把score的分值换成log3（10*原score）
+void print();//将answer分值最高的五个词与其得分按得分高低输出，输出格式需美观
 int main(){
 	FILE*fp;
 	int i=1;
@@ -60,7 +61,8 @@ void search(){
 			jaccard(str2);
 			cosine(str2);
 			cosine2(str2);
-			distance(str2);
+			editdistance(str2);
+			print;
 		}
 		else{
 			printf("在词典的第%d行，是",i);
