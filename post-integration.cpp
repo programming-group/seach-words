@@ -5,13 +5,13 @@
 char str1[2000][20];//存储字典里的词 
 double score[15];//备选的得分
 char answer[15][20];//备选的答案
-void search();//持续进行精确匹配，如无该词进入模糊匹配 
-void jaccard(char str2[]);// 将str2与所有词比较， 将分值最高的十个词存入 answer，将score里每个元素赋值为0
+void exactsearch();//持续进行精确匹配，如无该词进入模糊匹配 
+void jaccard(char str2[]);// 将str2与所有词比较，将分值最高的十五个词存入 answer，将score里每个元素赋值为得分*0.1 
 void change(char str2[], double vector[], char letter[]);     //定义一个用来将单词转换成26维单位向量的函数  得加到框架最初定义函数部分 
-void cosine(char str2[]);//将str2与answer中十个词比较，分值也应在0与1之间，将分值分别加到score
+void cosine(char str2[]);//将str2与answer中十个词比较，分值也应在0与1之间，将分值*0.9分别加到score
 int min_of_three(int n1,int n2,int n3);
 int edit_distance(char *a, char *b) ;
-void editdistance(char str2[]);//将str2与answer中十个词比较，比如需要三步变换，就把score的分值换成log3（10*原score）
+void editdistance(char str2[]);//将str2与answer中十个词比较，比如需要三步变换，就把score的分值减去3/目标单词的长度 
 void print();//将answer分值最高的五个词与其得分按得分高低输出，输出格式需美观
 int main(){
 	FILE*fp;
@@ -38,11 +38,10 @@ int main(){
 	strcpy(str1[1992],"anyone");
 	strcpy(str1[1993],"bike");
 	printf("请输入待查单词(输入$结束查询)：");
-	search();
-	
+	exactsearch();
 	return 0;
 } 
-void search(){
+void exactsearch(){
 	int i=1;
 	char str2[20];
 	scanf("%s",&str2);
@@ -67,7 +66,7 @@ void search(){
 			puts(str1[i]);
 		}
 		printf("请输入待查单词(输入$结束查询)：");
-		search();
+		exactsearch();
 	}
 	return;
 }
@@ -118,7 +117,6 @@ void jaccard(char str2[]){
 	for(i=0;i<15;i++) {
 		strcpy(answer[i], str1[posi[i+1]]);
 		score[i]=0.1*aim[i+1];
-//		printf("%s %lf\n",answer[i],score[i]);  //正常
 	}     
 	return;
 } 
